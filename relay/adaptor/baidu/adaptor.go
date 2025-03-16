@@ -77,7 +77,7 @@ func (a *Adaptor) GetRequestURL(meta *meta.Meta) (string, error) {
 		suffix += "bge_large_zh"
 	case "bge-large-en":
 		suffix += "bge_large_en"
-	case "bce-rerank-base"
+	case "bce-rerank-base":
 		suffix += "bce_rerank_base"
 	case "tao-8k":
 		suffix += "tao_8k"
