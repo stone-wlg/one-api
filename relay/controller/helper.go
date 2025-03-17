@@ -196,3 +196,35 @@ func setSystemPrompt(ctx context.Context, request *relaymodel.GeneralOpenAIReque
 	logger.Infof(ctx, "add system prompt")
 	return true
 }
+
+func getRerankRequest(c *gin.Context, relayMode int) (*relaymodel.RerankRequest, error) {
+	rerankRequest := &relaymodel.RerankRequest{}
+	err := common.UnmarshalBodyReusable(c, rerankRequest)
+	if err != nil {
+		return nil, err
+	}
+	if rerankRequest.Model == "" {
+		return nil, errors.New("model parameter must be provided")
+	}
+	// Set default values if necessary
+	if rerankRequest.TopN == nil {
+		defaultTopN := 10 // Default to returning top 10 results
+		rerankRequest.TopN = &defaultTopN
+	}
+	if rerankRequest.Query == "" {
+		return nil, errors.New("query must not be empty")
+	}
+	if len(rerankRequest.Documents) == 0 {
+		return nil, errors.New("document list must not be empty")
+	}
+	// if rerankRequest.MaxChunksPerDoc == nil {
+	//     defaultMaxChunks := 5 // Default maximum chunks per document
+	//     rerankRequest.MaxChunksPerDoc = &defaultMaxChunks
+	// }
+	if rerankRequest.ReturnDocuments == nil {
+		defaultReturnDocs := true // Default to returning documents
+		rerankRequest.ReturnDocuments = &defaultReturnDocs
+	}
+
+	return rerankRequest, nil
+}
